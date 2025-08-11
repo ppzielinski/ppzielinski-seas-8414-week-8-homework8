@@ -9,3 +9,4 @@ __pycache__/
 models/
 data/
 .streamlit/secrets.toml
+.DS_Store
