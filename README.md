@@ -1,40 +1,98 @@
-# Mini-SOAR Development Roadmap
+# Cognitive SOAR: From Prediction to Attribution
 
-This project is a **Mini Security Orchestration, Automation, and Response (SOAR)** platform for phishing detection and automated incident response.  
-It uses:
-- **Predictive Analytics** (PyCaret) to classify phishing URLs  
-- **Prescriptive Analytics** (Generative AI) to generate structured incident response plans  
-- **Streamlit** for the interactive UI
+## Overview
+This project extends the original Mini-SOAR application from a basic phishing URL detector into a **two-stage intelligent system**.  
+In addition to predicting whether a URL is malicious, the application now performs **threat attribution** for malicious URLs, 
+grouping them into likely **threat actor profiles** using unsupervised clustering.
 
----
-
-## Project Roadmap
-
-### Completed
-- **Environment Setup**
-  - Defined `Dockerfile` for containerized environment
-  - Created `docker-compose.yml` for orchestration
-  - Added `Makefile` for workflow automation
-
-### In Progress / To Do
-- **Predictive Engine** (`train_model.py`)
-  - [ ] Create synthetic data generator
-  - [ ] Integrate PyCaret to train and save the classification model
-
-- **Prescriptive Engine** (`genai_prescriptions.py`)
-  - [ ] Define a robust prompt to produce JSON-formatted output
-  - [ ] Implement API calls to Generative AI services (OpenAI, Google GenAI)
-
-- **UI & Orchestration** (`app.py`)
-  - [ ] Build input sidebar for URL features
-  - [ ] Orchestrate predictive (PyCaret) and prescriptive (GenAI) workflows
-  - [ ] Design output tabs for results display (analysis summary, visual insights, prescriptive plan)
+This enhancement transforms the tool from answering *"What will happen?"* to *"Who might be behind it?"*, 
+providing crucial context for analysts in a modern Security Operations Center (SOC).
 
 ---
 
-## Goal
-Deliver a **fully functional, documented, and automated web application** that:
-1. Accepts suspicious URL feature inputs
-2. Predicts if the URL is malicious
-3. Generates an AI-driven response plan
-4. Presents results in a clean, interactive UI
+## New Features
+- **Synthetic Feature Engineering** to simulate realistic threat actor patterns.
+- Added `has_political_keyword` feature to identify Hacktivist activity.
+- **K-Means clustering model** trained on malicious-only data to identify 3 distinct actor profiles:
+  - State-Sponsored
+  - Organized Cybercrime
+  - Hacktivist
+- JSON mapping from cluster IDs to human-readable actor profiles.
+- New **"Threat Attribution" tab** in the Streamlit UI with actor descriptions.
+- Optional **feature importance visualization** for analyst training and onboarding.
+
+---
+
+## Technology Stack
+- Python 3.x
+- PyCaret (Classification & Clustering)
+- Streamlit (Web UI)
+- Docker (Deployment)
+- JSON (Cluster mapping storage)
+
+---
+
+## Installation & Usage
+
+### 1. Clone the Repository
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
+
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Train Models
+```bash
+python train_model.py
+```
+This will generate:
+- `models/phishing_url_detector.pkl` — classification model
+- `models/threat_actor_profiler.pkl` — clustering model
+- `models/cluster_profile_mapping.json` — mapping from cluster IDs to actor profiles
+
+### 4. Run the Application
+```bash
+streamlit run app.py
+```
+Then open the displayed URL in your browser to interact with the UI.
+
+> **Note:** The Threat Attribution step runs **only** if the classification model predicts the URL is malicious.
+
+---
+
+## Example Output
+
+| Example URL Features             | Verdict     | Threat Actor Profile   |
+|----------------------------------|-------------|------------------------|
+| SSLfinal_State=1, Prefix_Suffix=1| Malicious   | State-Sponsored        |
+| Shortining_Service=1, IP=1       | Malicious   | Organized Cybercrime   |
+| has_political_keyword=1          | Malicious   | Hacktivist             |
+| SSLfinal_State=1, Prefix_Suffix=0| Benign      | N/A                    |
+
+---
+
+## Project Workflow
+
+```plaintext
+User Input → Classification Model (Malicious/Benign) 
+    ├── Benign → Display verdict only
+    └── Malicious → Clustering Model (K-Means) → Map to Threat Actor Profile → Display in Threat Attribution tab
+```
+
+---
+
+## References
+1. MITRE ATT&CK® Framework – https://attack.mitre.org
+2. FIRST (Forum of Incident Response and Security Teams) – Threat Actor Profiling Best Practices (2021)
+3. PyCaret Documentation – https://pycaret.gitbook.io/docs
+4. Chio, C., & Freeman, D. (2018). *Machine Learning and Security*. O’Reilly Media.
+5. SANS Institute. (2020). *The Value of Threat Attribution in Incident Response*.
+
+---
+
+## License
+This project is released under the MIT License.
