@@ -1,12 +1,3 @@
-# old requirements.txt
-# pandas
-# numpy
-# pycaret[full]
-# streamlit
-# google-generativeai
-# openai
-# requests
-
 pandas==2.1.4
 numpy==1.26.4
 scikit-learn==1.3.2
