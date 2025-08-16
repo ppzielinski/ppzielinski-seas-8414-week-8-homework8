@@ -1,4 +1,5 @@
-import json, re
+import json
+import re
 import streamlit as st
 import google.generativeai as genai
 import openai

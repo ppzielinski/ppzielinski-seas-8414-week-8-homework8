@@ -121,9 +121,11 @@ def _derive_mapping_from_centroids(centroids: np.ndarray, cols: list[str]) -> di
 
     def s_state(c):  # State → trusted SSL, low noise
         s = 0.0
-        j = idx.get("SSLfinal_State");        s += centroids[c, j] if j is not None else 0.0
+        j = idx.get("SSLfinal_State")
+        s += centroids[c, j] if j is not None else 0.0
         for k in ("Shortining_Service","having_IP_Address","Abnormal_URL","having_At_Symbol"):
-            j = idx.get(k);                   s -= centroids[c, j] if j is not None else 0.0
+            j = idx.get(k)
+            s -= centroids[c, j] if j is not None else 0.0
         return s
 
     clusters = list(range(centroids.shape[0]))
