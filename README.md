@@ -85,13 +85,6 @@ User Input → Classification Model (Malicious/Benign)
 
 ---
 
-## References
-1. MITRE ATT&CK® Framework – https://attack.mitre.org
-2. FIRST (Forum of Incident Response and Security Teams) – Threat Actor Profiling Best Practices (2021)
-3. PyCaret Documentation – https://pycaret.gitbook.io/docs
-4. Chio, C., & Freeman, D. (2018). *Machine Learning and Security*. O’Reilly Media.
-5. SANS Institute. (2020). *The Value of Threat Attribution in Incident Response*.
-
 ---
 
 ## License
